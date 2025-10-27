@@ -86,7 +86,7 @@
                                             aria-labelledby="headingOne" data-bs-parent="#accordion">
                                         <div class="card-body">
                                             <div class="col-sm-12 mb-3">
-                                                <label class="col-form-label">Model Title</label>
+                                                <label class="col-form-label">Module Title</label>
                                                 <input class="form-control" type="text" placeholder="Module" name="modules[0][title]">
                                             </div>
 
