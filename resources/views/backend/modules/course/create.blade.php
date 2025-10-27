@@ -90,7 +90,7 @@
                                                 <input class="form-control" type="text" placeholder="Module" name="modules[0][title]">
                                             </div>
 
-                                            <button class="btn btn-primary btn-sm mb-3" id="add_content_btn">Add Content +</button>
+                                            <button class="btn btn-primary btn-sm mb-3 add_content_btn">Add Content +</button>
 
                                             <div class="content_box">
                                                 <div class="card content-item mb-3">
@@ -126,13 +126,17 @@
     });
 </script>
 
+
 <script>
 $(document).ready(function() {
-    let moduleCount = 1;
+    $('.select2').select2();
+
+    // start from 0 because initial module uses index 0
+    let moduleCount = 0;
 
     $("#add_new_module").click(function(e) {
         e.preventDefault();
-        moduleCount++;
+        moduleCount++; // new module index
 
         let accordionId = `accordion_${moduleCount}`;
         let collapseId = `general_settings_${moduleCount}`;
@@ -145,7 +149,7 @@ $(document).ready(function() {
                     <a href="#${collapseId}" class="text-dark" data-bs-toggle="collapse"
                         aria-expanded="false" aria-controls="${collapseId}">
                         <div class="card-header" id="${headingId}">
-                            <h6 class="m-0">Module ${moduleCount}</h6>
+                            <h6 class="m-0">Module ${moduleCount + 1}</h6>
                         </div>
                     </a>
                     <div id="${collapseId}" class="collapse show" aria-labelledby="${headingId}">
@@ -155,7 +159,8 @@ $(document).ready(function() {
                                 <input class="form-control module-title" type="text" placeholder="Module" name="modules[${moduleCount}][title]">
                             </div>
 
-                            <button class="btn btn-primary btn-sm mb-3" id="add_content_btn">Add Content +</button>
+                            <!-- use class instead of id -->
+                            <button class="btn btn-primary btn-sm mb-3 add_content_btn">Add Content +</button>
 
                             <div class="content_box">
                                 <div class="card content-item mb-3">
@@ -168,19 +173,35 @@ $(document).ready(function() {
                                     </div>
                                 </div>
                             </div>
+                            <!-- /.content_box -->
                         </div>
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.collapse -->
                 </div>
+                <!-- /.card -->
             </div>
         `);
     });
 
-    // Add content inside module
-    $(document).on('click', '#add_content_btn', function(e) {
+    // delegate to class .add_content_btn so it works for dynamic elements
+    $(document).on('click', '.add_content_btn', function(e) {
         e.preventDefault();
 
-        let moduleIndex = $(this).closest('.module-item').data('module-index');
-        let contentBox = $(this).closest('.card-body').find('.content_box');
+        // find the module wrapper and its index
+        let $module = $(this).closest('.module-item');
+        // fallback: if not found (shouldn't happen if markup consistent), use nearest card
+        if (!$module.length) {
+            $module = $(this).closest('.card');
+        }
+        let moduleIndex = $module.data('module-index');
+        if (typeof moduleIndex === 'undefined') {
+            // clear debug: assign 0 if undefined
+            moduleIndex = 0;
+        }
+
+        // find the content_box within the same module
+        let contentBox = $module.find('.content_box').first();
 
         contentBox.append(`
             <div class="card content-item mb-3">
@@ -195,19 +216,19 @@ $(document).ready(function() {
         `);
     });
 
+    // remove content item
     $(document).on('click', '.remove_content_btn', function(e) {
         e.preventDefault();
         $(this).closest('.content-item').remove();
     });
 
+    // remove entire module
     $(document).on('click', '.remove_module_btn', function(e) {
         e.preventDefault();
         $(this).closest('.module-item').remove();
     });
 });
 </script>
-
-
 
 
 @endsection
