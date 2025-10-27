@@ -11,9 +11,10 @@
 </p>
 
 
-📂 Project Structure
+📂 **Project Structure**
 ---
 
+```text
 app/
  ├── Models/
  │   ├── Course.php
