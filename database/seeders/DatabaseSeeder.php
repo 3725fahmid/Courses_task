@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             'username' =>'admin',
             'first_name' => 'Admin',
             'user_email' =>'admin@admin.com',
-            'user_mobile' =>'01818987778',
-            'password' => Hash::make('admin1234'),
+            'user_mobile' =>'1111111',
+            'password' => Hash::make('12345678'),
         ]);
     }
 }

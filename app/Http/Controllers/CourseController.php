@@ -136,5 +136,31 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         //
+
+        // 1️⃣ Find the course
+        // $course = Course::findOrFail($id);
+
+        // 2️⃣ Detach and delete related modules + their contents
+        foreach ($course->modules as $module) {
+            // delete all module contents
+            $module->contents()->delete();
+
+            // delete the module itself
+            $module->delete();
+        }
+
+        // 3️⃣ Detach pivot relation (course_course_module)
+        $course->modules()->detach();
+
+        // 4️⃣ Finally, delete the course
+        $course->delete();
+
+        $notification = array(
+            'message' => 'Course Deleted', 
+            'alert-type' => 'Danger'
+        );
+
+        // 5️⃣ Redirect back
+        return redirect()->route('courses.index')->with($notification);
     }
 }
